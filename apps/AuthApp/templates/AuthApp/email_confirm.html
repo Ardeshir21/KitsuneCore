@@ -1,0 +1,112 @@
+{% extends "CoreApp/simple_vue_layout/vue-layout.html" %}
+{% load i18n %}
+{% load account %}
+
+{% block title %}{% trans "Confirm Email" %}{% endblock title %}
+
+{% block content %}
+<v-container fluid class="fill-height">
+  <v-row align="center" justify="center">
+    <v-col cols="12" sm="8" md="6" lg="4">
+      <v-card class="mx-auto elevation-10 rounded-lg">
+        <v-card-item class="text-center pb-0">
+          <v-img
+            src="/static/images/logo.png"
+            class="mx-auto mb-4"
+            max-width="150"
+            contain
+          ></v-img>
+          <v-card-title class="text-h4 font-weight-bold">
+            {% if confirmation %}
+              {% trans "Confirm Email" %}
+            {% else %}
+              {% trans "Invalid Link" %}
+            {% endif %}
+          </v-card-title>
+          <v-card-subtitle>
+            {% if confirmation %}
+              {% trans "Please confirm your email address" %}
+            {% else %}
+              {% trans "This confirmation link is invalid or has expired." %}
+            {% endif %}
+          </v-card-subtitle>
+        </v-card-item>
+
+        {% include "AuthApp/components/messages.html" %}
+
+        {% if confirmation %}
+        <v-card-text class="pa-4">
+          <v-form
+            method="post"
+            action="{% url 'account_confirm_email' confirmation.key %}"
+            @submit.prevent="submit"
+          >
+            {% csrf_token %}
+            
+            <p class="text-body-1 mb-4 text-center">
+              {% trans "Please confirm that" %} <strong>{{ confirmation.email_address.email }}</strong> {% trans "is your email address." %}
+            </p>
+
+            <v-btn
+              type="submit"
+              color="primary"
+              block
+              size="large"
+              class="mb-4"
+              :loading="loading"
+            >
+              {% trans "Confirm Email" %}
+              <v-icon end icon="mdi-check"></v-icon>
+            </v-btn>
+          </v-form>
+        </v-card-text>
+        {% else %}
+        <v-card-text class="pa-4 text-center">
+          <v-icon
+            icon="mdi-alert"
+            size="64"
+            color="warning"
+            class="mb-4"
+          ></v-icon>
+
+          <v-btn
+            color="primary"
+            href="{% url 'account_email' %}"
+            block
+            class="mb-4"
+          >
+            {% trans "Manage Email Addresses" %}
+          </v-btn>
+        </v-card-text>
+        {% endif %}
+      </v-card>
+
+      <!-- Footer -->
+      <div class="text-center mt-4 text-medium-emphasis">
+        <small>&copy; {% now "Y" %} Kitsune. {% trans "All rights reserved" %}.</small>
+      </div>
+    </v-col>
+  </v-row>
+</v-container>
+{% endblock content %}
+
+{% block page_js %}
+<script>
+    const app = createApp({
+        delimiters: ["[[", "]]"],
+        data() {
+            return {
+                loading: false
+            };
+        },
+        methods: {
+            async submit(event) {
+                this.loading = true
+                event.target.submit()
+            }
+        }
+    });
+
+    app.use(vuetify).mount("#app");
+</script>
+{% endblock page_js %} 

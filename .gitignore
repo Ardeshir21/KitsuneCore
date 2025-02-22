@@ -1,0 +1,19 @@
+### Django ###
+*.log
+*.pot
+*.pyc
+*.sql
+log_scraper.txt
+log_crontab.txt
+__pycache__/
+letsencrypt/
+media/
+migrations/
+venv
+staticfiles
+/static
+/general-docs
+.env
+.vs
+db.sqlite3
+.idea

@@ -1,0 +1,44 @@
+services:
+  mainframe:
+    build:
+      context: .  # Use the current directory as the build context
+      dockerfile: ./docker/mainframe/dev.Dockerfile
+    restart: no
+    volumes:
+      - .:/app  # Bind mount the whole project directory to the container for development
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+
+  nginx:
+    build:
+      context: .  # Use the current directory as the build context
+      dockerfile: ./docker/nginx/dev.Dockerfile  # Specify the custom Dockerfile for Nginx
+    restart: no
+    volumes:
+      - ./static:/app/static # Bind mount the current directory to the container for development
+    env_file:
+      - .env
+    ports:
+      - "80:80"   # HTTP
+      - "443:443" # HTTPS
+    depends_on:
+      - mainframe
+
+
+  db:
+    build:
+      context: .  # Use the current directory as the build context
+      dockerfile: ./docker/database/Dockerfile  # Specify the custom Dockerfile for database
+    restart: no
+    ports:
+      - "5544:5432"  # Expose the PostgreSQL port to the host machine for PgAdmin
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+volumes:
+  db_volume:
