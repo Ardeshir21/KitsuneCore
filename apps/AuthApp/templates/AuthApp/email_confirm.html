@@ -10,12 +10,7 @@
     <v-col cols="12" sm="8" md="6" lg="4">
       <v-card class="mx-auto elevation-10 rounded-lg">
         <v-card-item class="text-center pb-0">
-          <v-img
-            src="/static/images/logo.png"
-            class="mx-auto mb-4"
-            max-width="150"
-            contain
-          ></v-img>
+          {% include "AuthApp/components/logo.html" %}
           <v-card-title class="text-h4 font-weight-bold">
             {% if confirmation %}
               {% trans "Confirm Email" %}
@@ -79,10 +74,7 @@
         {% endif %}
       </v-card>
 
-      <!-- Footer -->
-      <div class="text-center mt-4 text-medium-emphasis">
-        <small>&copy; {% now "Y" %} Kitsune. {% trans "All rights reserved" %}.</small>
-      </div>
+      {% include "AuthApp/components/footer.html" %}
     </v-col>
   </v-row>
 </v-container>
