@@ -1,0 +1,55 @@
+{% extends 'CoreApp/master.html' %}
+{% load static %}
+
+
+{% block header_css %}
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="{% static 'CoreApp/molla/assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'CoreApp/molla/assets/css/plugins/owl-carousel/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'CoreApp/molla/assets/css/plugins/magnific-popup/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'CoreApp/molla/assets/css/plugins/jquery.countdown.css' %}">
+
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="{% static 'CoreApp/molla/assets/css/style.css' %}">
+{% endblock header_css %}
+
+{% block layout %}
+    <div class="page-wrapper">
+        {% block header %}
+            <!-- Header will be included here -->
+        {% endblock %}
+
+        {% block main %}
+            <!-- Main content will be included here -->
+        {% endblock %}
+
+        {% block footer %}
+            <!-- Footer will be included here -->
+        {% endblock %}
+    </div>
+
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay"></div>
+
+    {% block mobile_menu %} 
+        <!-- Mobile menu content will be included here -->
+    {% endblock mobile_menu %}
+{% endblock layout %} 
+
+
+{% block vendor_js %}
+<!-- Plugins JS File -->
+<script src="{% static 'CoreApp/molla/assets/js/jquery.min.js' %}"></script>
+<script src="{% static 'CoreApp/molla/assets/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'CoreApp/molla/assets/js/jquery.hoverIntent.min.js' %}"></script>
+<script src="{% static 'CoreApp/molla/assets/js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'CoreApp/molla/assets/js/superfish.min.js' %}"></script>
+<script src="{% static 'CoreApp/molla/assets/js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'CoreApp/molla/assets/js/jquery.magnific-popup.min.js' %}"></script>
+<script src="{% static 'CoreApp/molla/assets/js/jquery.plugin.min.js' %}"></script>
+<script src="{% static 'CoreApp/molla/assets/js/jquery.countdown.min.js' %}"></script>
+<!-- Main JS File -->
+<script src="{% static 'CoreApp/molla/assets/js/main.js' %}"></script>
+{% endblock vendor_js %}

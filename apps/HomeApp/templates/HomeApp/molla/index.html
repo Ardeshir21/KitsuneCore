@@ -1,0 +1,40 @@
+{% extends 'CoreApp/molla/molla-layout.html' %}
+{% load static %}
+
+
+{% block page_title %}
+    <title>Molla - Online Shop</title>
+{% endblock %}
+
+
+{% block page_css %}
+    <link rel="stylesheet" href="{% static 'molla/assets/css/demos/demo-14.css' %}">
+    <link rel="stylesheet" href="{% static 'molla/assets/css/skins/skin-demo-14.css' %}">
+    <link rel="stylesheet" href="{% static 'HomeApp/css/custom.css' %}">
+{% endblock %}
+
+
+{% block header %}
+    {% include 'HomeApp/molla/components/header.html' %}
+{% endblock %}
+
+
+{% block main %}
+    <h1>Hello World</h1>
+{% endblock %}
+
+
+{% block footer %}
+    {% include 'HomeApp/molla/components/footer.html' %}
+{% endblock %}
+
+
+{% block mobile_menu %}
+    {% include 'HomeApp/molla/components/mobile_menu.html' %}
+{% endblock mobile_menu %}
+
+
+{% block page_js %}
+    <script src="{% static 'molla/assets/js/demos/demo-14.js' %}"></script>
+{% endblock %}
+

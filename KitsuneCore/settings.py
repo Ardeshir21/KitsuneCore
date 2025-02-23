@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     # Apps
     'apps.CoreApp',
     'apps.AuthApp',
+    'apps.HomeApp',
     
     # Authentication
     'allauth',

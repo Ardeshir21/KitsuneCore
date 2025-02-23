@@ -12,7 +12,7 @@ AUTHENTICATION_BACKENDS = [
 
 AUTH_USER_MODEL = 'AuthApp.CoreUser'
 
-LOGIN_REDIRECT_URL = reverse_lazy('CoreApp:index')
+LOGIN_REDIRECT_URL = reverse_lazy('home')
 LOGIN_URL = reverse_lazy('account_login')
 
 # ACCOUNT_ADAPTER = 'apps.AuthApp.adaptor.AccountAdapter'

@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 # from django.contrib.sitemaps.views import sitemap
 from . import views
 
-app_name = 'CoreApp'
+# app_name = 'CoreApp'
 
 # sitemaps_dict = {'Static_sitemap': sitemaps.StaticSitemap,
 #                 'Product_sitemap': sitemaps.ProductSitemap,
@@ -15,8 +15,6 @@ app_name = 'CoreApp'
 #                 }
 
 urlpatterns = [
-    path('', views.HomeView.as_view(), name='index'),
-
     # Maintenance
     # path('maintenance/', views.MaintenanceView.as_view(), name='maintenance_page'),'
 
