@@ -14,7 +14,7 @@ urlpatterns = [
     path("logout/", views.CustomLogoutView.as_view(), name="account_logout"),
 
     # E-mail
-    # path("email/", views.CustomEmailView.as_view(), name="account_email"),
+    path("email/", views.CustomEmailView.as_view(), name="account_email"),
     path(
         "confirm-email/",
         views.CustomEmailVerificationSentView.as_view(),
@@ -50,6 +50,11 @@ urlpatterns = [
         views.CustomPasswordChangeView.as_view(),
         name="account_change_password"
     ),
+
+    # Account management
+    path("inactive/", views.CustomAccountInactiveView.as_view(), name="account_inactive"),
+    path("reauthenticate/", views.CustomReauthenticateView.as_view(), name="account_reauthenticate"),
+    path("password/set/", views.CustomPasswordSetView.as_view(), name="account_set_password"),
 ]
 
 

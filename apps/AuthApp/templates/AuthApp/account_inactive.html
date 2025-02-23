@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load account %}
 
-{% block title %}{% trans "Password Changed" %}{% endblock title %}
+{% block title %}{% trans "Account Inactive" %}{% endblock title %}
 
 {% block content %}
 <v-container fluid class="fill-height">
@@ -17,29 +17,31 @@
             contain
           ></v-img>
           <v-card-title class="text-h4 font-weight-bold">
-            {% trans "Password Changed Successfully" %}
+            {% trans "Account Inactive" %}
           </v-card-title>
           <v-card-subtitle>
-            {% trans "Your password has been changed. You can now login with your new password." %}
+            {% trans "This account is currently inactive" %}
           </v-card-subtitle>
         </v-card-item>
 
         <v-card-text class="pa-4 text-center">
           <v-icon
-            icon="mdi-check-circle"
+            icon="mdi-account-off"
             size="64"
-            color="success"
+            color="warning"
             class="mb-4"
           ></v-icon>
+          
+          <p class="text-body-1 mb-4">
+            {% trans "Please contact the administrator to activate your account." %}
+          </p>
 
           <v-btn
             color="primary"
             href="{% url 'account_login' %}"
-            block
-            size="large"
+            class="mb-4"
           >
-            {% trans "Sign In" %}
-            <v-icon end icon="mdi-login"></v-icon>
+            {% trans "Return to Login" %}
           </v-btn>
         </v-card-text>
       </v-card>

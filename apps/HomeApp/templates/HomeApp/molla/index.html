@@ -8,8 +8,8 @@
 
 
 {% block page_css %}
-    <link rel="stylesheet" href="{% static 'molla/assets/css/demos/demo-14.css' %}">
-    <link rel="stylesheet" href="{% static 'molla/assets/css/skins/skin-demo-14.css' %}">
+    <link rel="stylesheet" href="{% static 'CoreApp/molla/assets/css/demos/demo-14.css' %}">
+    <link rel="stylesheet" href="{% static 'CoreApp/molla/assets/css/skins/skin-demo-14.css' %}">
     <link rel="stylesheet" href="{% static 'HomeApp/css/custom.css' %}">
 {% endblock %}
 
@@ -20,7 +20,7 @@
 
 
 {% block main %}
-    <h1>Hello World</h1>
+    {% include 'HomeApp/molla/components/main.html' %}
 {% endblock %}
 
 
@@ -35,6 +35,6 @@
 
 
 {% block page_js %}
-    <script src="{% static 'molla/assets/js/demos/demo-14.js' %}"></script>
+    <script src="{% static 'CoreApp/molla/assets/js/demos/demo-14.js' %}"></script>
 {% endblock %}
 

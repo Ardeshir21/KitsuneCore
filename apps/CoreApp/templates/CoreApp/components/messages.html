@@ -1,0 +1,159 @@
+{% if messages %}
+<div class="messages-container">
+    {% for message in messages %}
+    <div class="message {% if message.tags %}message-{{ message.tags }}{% endif %}" role="alert">
+        <div class="message-content">
+            <span class="message-text">{{ message }}</span>
+            <button class="message-close" onclick="this.parentElement.parentElement.remove()">&times;</button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .messages-container {
+        position: fixed;
+        top: 40px;
+        right: 20px;
+        z-index: 1000;
+        max-width: 600px;
+        width: calc(100% - 40px);
+    }
+
+    .message {
+        padding: 12px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        animation: slideIn 0.3s ease-in-out;
+        word-wrap: break-word;
+    }
+
+    .message-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        min-height: 24px;
+    }
+
+    .message-text {
+        margin-right: 10px;
+        flex: 1;
+        font-size: 14px;
+        line-height: 1.4;
+        padding: 2px 0;
+    }
+
+    .message-close {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+        padding: 0 5px;
+        flex-shrink: 0;
+    }
+
+    /* Media Queries for Responsive Design */
+    @media screen and (max-width: 640px) {
+        .messages-container {
+            max-width: 400px;
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        .messages-container {
+            top: 20px;
+            right: 10px;
+            width: calc(100% - 20px);
+        }
+
+        .message {
+            padding: 10px;
+            font-size: 13px;
+        }
+
+        .message-close {
+            font-size: 18px;
+        }
+    }
+
+    @media screen and (max-width: 320px) {
+        .messages-container {
+            top: 15px;
+            right: 5px;
+            width: calc(100% - 10px);
+        }
+
+        .message {
+            padding: 8px;
+            font-size: 12px;
+        }
+    }
+
+    /* Message types */
+    .message-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .message-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .message-warning {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeeba;
+    }
+
+    .message-info {
+        background-color: #cce5ff;
+        color: #004085;
+        border: 1px solid #b8daff;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* Auto-hide animation */
+    .message {
+        animation: slideIn 0.3s ease-in-out, fadeOut 0.5s ease-in-out 5s forwards;
+    }
+
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+            display: none;
+        }
+    }
+</style>
+
+<script>
+    // Optional: Auto-remove messages after 8 seconds (after fade out)
+    document.addEventListener('DOMContentLoaded', function() {
+        const messages = document.querySelectorAll('.message');
+        messages.forEach(message => {
+            setTimeout(() => {
+                message.remove();
+            }, 8000);
+        });
+    });
+</script>
+{% endif %} 

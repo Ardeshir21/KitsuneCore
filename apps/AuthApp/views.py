@@ -12,13 +12,18 @@ from allauth.account.views import (
     PasswordResetFromKeyView,
     PasswordResetFromKeyDoneView,
     PasswordChangeView,
+    AccountInactiveView,
+    ReauthenticateView,
+    PasswordSetView,
 )
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import logout
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.conf import settings
+from django.http import HttpResponseRedirect
 
 
 # The views are inherited from allAuth to override them if needed.
@@ -63,10 +68,6 @@ class CustomRegisterView(SignupView):
         return context
 
 
-# Email View
-# This view is to add or change the emails. It's disabled using ACCOUNT_MAX_EMAIL_ADDRESSES
-# class CustomEmailView(LoginRequiredMixin, EmailView):
-#     pass
 
 
 # Email Verification View
@@ -165,3 +166,50 @@ class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
             "Please correct the errors below.",
         )
         return super().form_invalid(form)
+
+
+# Account Inactive View
+class CustomAccountInactiveView(AccountInactiveView):
+    template_name = 'AuthApp/account_inactive.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Account Inactive'
+        return context
+
+
+# Reauthenticate View
+class CustomReauthenticateView(ReauthenticateView):
+    template_name = 'AuthApp/reauthenticate.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Reauthenticate'
+        return context
+
+
+# Email Management View
+class CustomEmailView(LoginRequiredMixin, EmailView):
+    template_name = 'AuthApp/email.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        # If ACCOUNT_MAX_EMAIL_ADDRESSES is 1, redirect to home
+        if getattr(settings, 'ACCOUNT_MAX_EMAIL_ADDRESSES', 1) == 1:
+            return HttpResponseRedirect(reverse('home'))
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Email Management'
+        return context
+
+
+# Password Set View (for social accounts)
+class CustomPasswordSetView(LoginRequiredMixin, PasswordSetView):
+    template_name = 'AuthApp/password_set.html'
+    success_url = reverse_lazy('account_login')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Set Password'
+        return context
