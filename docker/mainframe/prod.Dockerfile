@@ -20,5 +20,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 9000
 
 # Command to run the application (can be overridden in docker-compose.yml)
-CMD ["gunicorn", "KitsuneCore.wsgi:application", "--bind", "0.0.0.0:9000"]
+# read APP_NAME from .env file
+ARG APP_NAME
+RUN echo "APP_NAME: $APP_NAME"
+CMD ["gunicorn", "--config", "./docker/mainframe/gunicorn-cfg.py", "$APP_NAME.wsgi:application"]
 

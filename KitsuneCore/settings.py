@@ -99,7 +99,7 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True # Allow cookies to be sent with requests
 
-ROOT_URLCONF = 'KitsuneCore.urls'
+ROOT_URLCONF = f'{os.getenv("APP_NAME")}.urls'
 
 TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 
@@ -116,13 +116,14 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'apps.CoreApp.context_processors.core',
             ],
             'debug': DEBUG,
         },
     },
 ]
 
-WSGI_APPLICATION = 'KitsuneCore.wsgi.application'
+WSGI_APPLICATION = f'{os.getenv("APP_NAME")}.wsgi.application'
 
 
 # Email settings
@@ -246,3 +247,14 @@ else:
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# App Information Settings
+APP_INFO = {
+    'APP_NAME': os.getenv('APP_NAME'),
+    'COMPANY_NAME': os.getenv('COMPANY_NAME'),
+    'SOCIAL_LINKS': {
+        'twitter': os.getenv('SOCIAL_TWITTER'),
+        'facebook': os.getenv('SOCIAL_FACEBOOK'),
+        'instagram': os.getenv('SOCIAL_INSTAGRAM'),
+    }
+}

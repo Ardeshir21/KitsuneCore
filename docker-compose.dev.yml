@@ -3,11 +3,15 @@ services:
     build:
       context: .  # Use the current directory as the build context
       dockerfile: ./docker/mainframe/dev.Dockerfile
+      args:
+        APP_NAME: ${APP_NAME}
     restart: no
     volumes:
       - .:/app  # Bind mount the whole project directory to the container for development
     env_file:
       - .env
+    environment:
+      - APP_NAME=${APP_NAME}
     depends_on:
       - db
 

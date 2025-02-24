@@ -22,5 +22,15 @@ COPY . .
 EXPOSE 9000
 
 # Command to run the application (can be overridden in docker-compose.yml)
-CMD ["gunicorn", "--config", "./docker/mainframe/gunicorn-cfg.py", "KitsuneCore.wsgi:application"]
+# read APP_NAME from .env file
+# Use an argument for build-time substitution
+ARG APP_NAME
 
+# Set an environment variable for runtime
+ENV APP_NAME=${APP_NAME}
+
+# Debugging: Print the app name during build
+RUN echo "APP_NAME: $APP_NAME"
+
+# Set the default command to run the application
+CMD gunicorn --config ./docker/mainframe/gunicorn-cfg.py "${APP_NAME}.wsgi:application"
