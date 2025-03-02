@@ -1,154 +1,181 @@
-{% extends "CoreApp/simple_vue_layout/vue-layout.html" %}
+{% extends "CoreApp/vue_layout/vue-layout.html" %}
 {% load i18n %}
 {% load account %}
 
-{% block title %}{% trans "Email Addresses" %}{% endblock title %}
 
 {% block content %}
 <v-container fluid class="fill-height">
   <v-row align="center" justify="center">
     <v-col cols="12" sm="8" md="6" lg="4">
       <v-card class="mx-auto elevation-10 rounded-lg">
-        <v-card-item class="text-center pb-0">
-          {% include "AuthApp/components/logo.html" %}
-          <v-card-title class="text-h4 font-weight-bold">
-            {% trans "Email Addresses" %}
-          </v-card-title>
-          <v-card-subtitle>
-            {% trans "Manage your email addresses" %}
-          </v-card-subtitle>
-        </v-card-item>
+        <template v-if="initialized">
+          <v-card-item class="text-center mt-8">
+            {% include "AuthApp/components/logo.html" %}
+            <v-card-title class="text-h4 font-weight-bold">
+              {% trans "Email Addresses" %}
+            </v-card-title>
+            <v-card-subtitle>
+              {% trans "Manage your email addresses" %}
+            </v-card-subtitle>
+          </v-card-item>
 
-        <v-card-text class="pa-4">
-          {% if user.emailaddress_set.all %}
-          <v-form
-            method="post"
-            action="{% url 'account_email' %}"
-            @submit.prevent="submit"
-          >
-            {% csrf_token %}
-
-            <!-- List of existing email addresses -->
-            <v-list lines="two">
-              {% for emailaddress in user.emailaddress_set.all %}
-              <v-list-item>
-                <template v-slot:prepend>
-                  <v-checkbox
-                    name="email"
-                    value="{{ emailaddress.email }}"
-                    density="compact"
-                    hide-details
-                  ></v-checkbox>
-                </template>
-
-                <v-list-item-title>
-                  {{ emailaddress.email }}
-                  {% if emailaddress.verified %}
-                  <v-chip
-                    color="success"
-                    size="small"
-                    class="ms-2"
-                  >
-                    {% trans "Verified" %}
-                  </v-chip>
-                  {% else %}
-                  <v-chip
-                    color="warning"
-                    size="small"
-                    class="ms-2"
-                  >
-                    {% trans "Unverified" %}
-                  </v-chip>
-                  {% endif %}
-                  {% if emailaddress.primary %}
-                  <v-chip
-                    color="primary"
-                    size="small"
-                    class="ms-2"
-                  >
-                    {% trans "Primary" %}
-                  </v-chip>
-                  {% endif %}
-                </v-list-item-title>
-              </v-list-item>
-              {% endfor %}
-            </v-list>
-
-            <v-card-actions class="px-0">
-              <v-btn
-                type="submit"
-                name="action_primary"
-                color="primary"
-                variant="text"
-                :loading="loading"
-              >
-                {% trans "Make Primary" %}
-              </v-btn>
-
-              <v-btn
-                type="submit"
-                name="action_send"
-                color="info"
-                variant="text"
-                :loading="loading"
-              >
-                {% trans "Re-send Verification" %}
-              </v-btn>
-
-              <v-btn
-                type="submit"
-                name="action_remove"
-                color="error"
-                variant="text"
-                :loading="loading"
-              >
-                {% trans "Remove" %}
-              </v-btn>
-            </v-card-actions>
-          </v-form>
-          {% endif %}
-
-          <!-- Add email form -->
-          <v-form
-            method="post"
-            action="{% url 'account_email' %}"
-            @submit.prevent="submitAdd"
-            class="mt-4"
-          >
-            {% csrf_token %}
-
-            <v-text-field
-              name="email"
-              label="{% trans 'Add Email Address' %}"
-              type="email"
-              variant="outlined"
-              prepend-inner-icon="mdi-email-plus"
-              class="mb-4"
-              :rules="rules.email"
-              {% if form.email.errors %}
-              error-messages="{{ form.email.errors|striptags }}"
-              {% endif %}
-            ></v-text-field>
-
-            <v-btn
-              type="submit"
-              color="primary"
-              block
-              size="large"
-              class="mb-4"
-              :loading="loadingAdd"
+          <v-card-text class="pa-4">
+            {% if user.emailaddress_set.all %}
+            <v-form
+              method="post"
+              action="{% url 'account_email' %}"
+              @submit.prevent="submit"
             >
-              {% trans "Add Email" %}
-              <v-icon end icon="mdi-plus"></v-icon>
-            </v-btn>
-          </v-form>
+              {% csrf_token %}
 
-          <v-divider class="my-4"></v-divider>
+              <!-- List of existing email addresses -->
+              <v-list lines="two">
+                {% for emailaddress in user.emailaddress_set.all %}
+                <v-list-item>
+                  <template v-slot:prepend>
+                    <v-checkbox
+                      name="email"
+                      value="{{ emailaddress.email }}"
+                      density="compact"
+                      hide-details
+                    ></v-checkbox>
+                  </template>
 
-          <div class="text-body-2 text-medium-emphasis">
-            {% trans 'Your primary email address will be used for account-related notifications and can be used to reset your password.' %}
-          </div>
-        </v-card-text>
+                  <v-list-item-title>
+                    {{ emailaddress.email }}
+                    {% if emailaddress.verified %}
+                    <v-chip
+                      color="success"
+                      size="small"
+                      class="ms-2"
+                    >
+                      {% trans "Verified" %}
+                    </v-chip>
+                    {% else %}
+                    <v-chip
+                      color="warning"
+                      size="small"
+                      class="ms-2"
+                    >
+                      {% trans "Unverified" %}
+                    </v-chip>
+                    {% endif %}
+                    {% if emailaddress.primary %}
+                    <v-chip
+                      color="primary"
+                      size="small"
+                      class="ms-2"
+                    >
+                      {% trans "Primary" %}
+                    </v-chip>
+                    {% endif %}
+                  </v-list-item-title>
+                </v-list-item>
+                {% endfor %}
+              </v-list>
+
+              <v-card-actions class="px-0">
+                <v-btn
+                  type="submit"
+                  name="action_primary"
+                  color="primary"
+                  variant="text"
+                  :loading="loading"
+                >
+                  {% trans "Make Primary" %}
+                </v-btn>
+
+                <v-btn
+                  type="submit"
+                  name="action_send"
+                  color="info"
+                  variant="text"
+                  :loading="loading"
+                >
+                  {% trans "Re-send Verification" %}
+                </v-btn>
+
+                <v-btn
+                  type="submit"
+                  name="action_remove"
+                  color="error"
+                  variant="text"
+                  :loading="loading"
+                >
+                  {% trans "Remove" %}
+                </v-btn>
+              </v-card-actions>
+            </v-form>
+            {% endif %}
+
+            <!-- Add email form -->
+            <v-form
+              method="post"
+              action="{% url 'account_email' %}"
+              @submit.prevent="submitAdd"
+              class="mt-4"
+            >
+              {% csrf_token %}
+
+              <v-text-field
+                name="email"
+                label="{% trans 'Add Email Address' %}"
+                type="email"
+                variant="outlined"
+                prepend-inner-icon="mdi-email-plus"
+                class="mb-4"
+                :rules="rules.email"
+                {% if form.email.errors %}
+                error-messages="{{ form.email.errors|striptags }}"
+                {% endif %}
+              ></v-text-field>
+
+              <v-btn
+                type="submit"
+                color="primary"
+                block
+                size="large"
+                class="mb-4"
+                :loading="loadingAdd"
+              >
+                {% trans "Add Email" %}
+                <v-icon end icon="mdi-plus"></v-icon>
+              </v-btn>
+            </v-form>
+
+            <v-divider class="my-4"></v-divider>
+
+            <div class="text-body-2 text-medium-emphasis">
+              {% trans 'Your primary email address will be used for account-related notifications and can be used to reset your password.' %}
+            </div>
+          </v-card-text>
+        </template>
+
+        <template v-else>
+          <v-card-item class="text-center pb-0">
+            <v-skeleton-loader
+              class="mx-auto mb-4"
+              max-width="150"
+              height="50"
+              type="image"
+            ></v-skeleton-loader>
+            <v-skeleton-loader
+              type="heading"
+              class="mb-2"
+            ></v-skeleton-loader>
+            <v-skeleton-loader
+              type="text"
+              class="mb-4"
+            ></v-skeleton-loader>
+          </v-card-item>
+
+          <v-card-text class="pa-4">
+            <v-skeleton-loader
+              type="article"
+              class="mb-4"
+            ></v-skeleton-loader>
+          </v-card-text>
+        </template>
       </v-card>
 
       {% include "AuthApp/components/footer.html" %}
@@ -163,6 +190,7 @@
         delimiters: ["[[", "]]"],
         data() {
             return {
+                initialized: false,
                 loading: false,
                 loadingAdd: false,
                 rules: {
@@ -173,6 +201,11 @@
                     ]
                 }
             };
+        },
+        mounted() {
+            setTimeout(() => {
+                this.initialized = true;
+            }, 500);
         },
         methods: {
             async submit(event) {

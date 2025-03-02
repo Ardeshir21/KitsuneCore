@@ -1,133 +1,160 @@
-{% extends "CoreApp/simple_vue_layout/vue-layout.html" %}
+{% extends "CoreApp/vue_layout/vue-layout.html" %}
 {% load i18n %}
 {% load account %}
 {% load socialaccount %}
 
-{% block title %}{% trans "Login" %}{% endblock title %}
 
 {% block content %}
 <v-container fluid class="fill-height">
   <v-row align="center" justify="center">
     <v-col cols="12" sm="8" md="6" lg="4">
       <v-card class="mx-auto elevation-10 rounded-lg">
-        <v-card-item class="text-center pb-0">
-          {% include "AuthApp/components/logo.html" %}
-          <v-card-title class="text-h4 font-weight-bold">
-            {% trans "Welcome Back" %}
-          </v-card-title>
-          <v-card-subtitle>
-            {% trans "Sign in to continue to your account" %}
-          </v-card-subtitle>
-        </v-card-item>
+        <template v-if="initialized">
+          <v-card-item class="text-center mt-8">
+            {% include "AuthApp/components/logo.html" %}
+            <v-card-title class="text-h4 font-weight-bold">
+              {% trans "Welcome Back" %}
+            </v-card-title>
+            <v-card-subtitle>
+              {% trans "Sign in to continue to your account" %}
+            </v-card-subtitle>
+          </v-card-item>
 
-        <v-card-text class="pa-4">
-          <v-form
-            method="POST"
-            action="{% url 'account_login' %}"
-            class="login"
-            @submit.prevent="submit"
-          >
-            {% csrf_token %}
-            
-            {% if redirect_field_value %}
-            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-            {% endif %}
-
-            <v-text-field
-              name="login"
-              label="{{ form.login.label }}"
-              type="text"
-              variant="outlined"
-              prepend-inner-icon="mdi-account"
-              class="mb-2"
-              :rules="rules.email"
-              autocomplete="username"
-              {% if form.login.errors %}
-              error-messages="{{ form.login.errors|striptags }}"
-              {% endif %}
-            ></v-text-field>
-
-            <v-text-field
-              name="password"
-              label="{{ form.password.label }}"
-              :type="showPassword ? 'text' : 'password'"
-              variant="outlined"
-              prepend-inner-icon="mdi-lock"
-              :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-              @click:append-inner="showPassword = !showPassword"
-              class="mb-2"
-              :rules="rules.password"
-              autocomplete="current-password"
-              {% if form.password.errors %}
-              error-messages="{{ form.password.errors|striptags }}"
-              {% endif %}
-            ></v-text-field>
-
-            <div class="d-flex align-center justify-space-between mb-4">
-              <v-checkbox
-                name="remember"
-                label="{{ form.remember.label }}"
-                density="compact"
-                hide-details
-                {% if form.remember.errors %}
-                error-messages="{{ form.remember.errors|striptags }}"
-                {% endif %}
-              ></v-checkbox>
-              
-              <v-btn
-                variant="text"
-                color="primary"
-                href="{% url 'account_reset_password' %}"
-                density="compact"
-              >
-                {% trans "Forgot Password?" %}
-              </v-btn>
-            </div>
-
-            <v-btn
-              type="submit"
-              color="primary"
-              block
-              size="large"
-              class="mb-4"
-              :loading="loading"
+          <v-card-text class="pa-4">
+            <v-form
+              method="POST"
+              action="{% url 'account_login' %}"
+              class="login"
+              @submit.prevent="submit"
             >
-              {% trans "Sign In" %}
-              <v-icon end icon="mdi-login"></v-icon>
-            </v-btn>
+              {% csrf_token %}
+              
+              {% if redirect_field_value %}
+              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+              {% endif %}
 
-            <div class="text-center mb-4">
-              <v-divider class="mb-3">
-                <span class="text-medium-emphasis">{% trans "or continue with" %}</span>
-              </v-divider>
+              <v-text-field
+                name="login"
+                label="{{ form.login.label }}"
+                type="text"
+                variant="outlined"
+                prepend-inner-icon="mdi-account"
+                class="mb-2"
+                :rules="rules.email"
+                autocomplete="username"
+                {% if form.login.errors %}
+                error-messages="{{ form.login.errors|striptags }}"
+                {% endif %}
+              ></v-text-field>
 
-              {% get_providers as socialaccount_providers %}
-              {% for provider in socialaccount_providers %}
+              <v-text-field
+                name="password"
+                label="{{ form.password.label }}"
+                :type="showPassword ? 'text' : 'password'"
+                variant="outlined"
+                prepend-inner-icon="mdi-lock"
+                :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                @click:append-inner="showPassword = !showPassword"
+                class="mb-2"
+                :rules="rules.password"
+                autocomplete="current-password"
+                {% if form.password.errors %}
+                error-messages="{{ form.password.errors|striptags }}"
+                {% endif %}
+              ></v-text-field>
+
+              <div class="d-flex align-center justify-space-between mb-4">
+                <v-checkbox
+                  name="remember"
+                  label="{{ form.remember.label }}"
+                  density="compact"
+                  hide-details
+                  {% if form.remember.errors %}
+                  error-messages="{{ form.remember.errors|striptags }}"
+                  {% endif %}
+                ></v-checkbox>
+                
                 <v-btn
-                  href="{% provider_login_url provider.id process='login' %}"
-                  variant="outlined"
-                  prepend-icon="mdi-google"
-                  class="mb-4"
-                  block
+                  variant="text"
+                  color="primary"
+                  href="{% url 'account_reset_password' %}"
+                  density="compact"
                 >
-                  {% trans "Continue with Google" %}
+                  {% trans "Forgot Password?" %}
                 </v-btn>
-              {% endfor %}
-            </div>
+              </div>
 
-            <div class="text-center">
-              <span class="text-medium-emphasis">{% trans "Don't have an account?" %}</span>
               <v-btn
-                variant="text"
+                type="submit"
                 color="primary"
-                href="{% url 'account_signup' %}"
-                class="ms-2"
+                block
+                size="large"
+                class="mb-4"
+                :loading="loading"
               >
-                {% trans "Sign up" %}
+                {% trans "Sign In" %}
+                <v-icon end icon="mdi-login"></v-icon>
               </v-btn>
-            </div>
-          </v-form>
-        </v-card-text>
+
+              <div class="text-center mb-4">
+                <v-divider class="mb-3">
+                  <span class="text-medium-emphasis">{% trans "or continue with" %}</span>
+                </v-divider>
+
+                {% get_providers as socialaccount_providers %}
+                {% for provider in socialaccount_providers %}
+                  <v-btn
+                    href="{% provider_login_url provider.id process='login' %}"
+                    variant="outlined"
+                    prepend-icon="mdi-google"
+                    class="mb-4 mt-5"
+                    block
+                  >
+                    {% trans "Continue with Google" %}
+                  </v-btn>
+                {% endfor %}
+              </div>
+
+              <div class="text-center">
+                <span class="text-medium-emphasis">{% trans "Don't have an account?" %}</span>
+                <v-btn
+                  variant="text"
+                  color="primary"
+                  href="{% url 'account_signup' %}"
+                  class="ms-2"
+                >
+                  {% trans "Sign up" %}
+                </v-btn>
+              </div>
+            </v-form>
+          </v-card-text>
+        </template>
+
+        <template v-else>
+          <v-card-item class="text-center pb-0">
+            <v-skeleton-loader
+              class="mx-auto mb-4"
+              max-width="150"
+              height="50"
+              type="image"
+            ></v-skeleton-loader>
+            <v-skeleton-loader
+              type="heading"
+              class="mb-2"
+            ></v-skeleton-loader>
+            <v-skeleton-loader
+              type="text"
+              class="mb-4"
+            ></v-skeleton-loader>
+          </v-card-item>
+
+          <v-card-text class="pa-4">
+            <v-skeleton-loader
+              type="article"
+              class="mb-4"
+            ></v-skeleton-loader>
+          </v-card-text>
+        </template>
       </v-card>
 
       {% include "AuthApp/components/footer.html" %}
@@ -142,6 +169,7 @@
         delimiters: ["[[", "]]"],
         data() {
             return {
+                initialized: false,
                 showPassword: false,
                 loading: false,
                 rules: {
@@ -154,6 +182,12 @@
                     ]
                 }
             };
+        },
+        mounted() {
+            // Simulate a small delay to show the skeleton
+            setTimeout(() => {
+                this.initialized = true;
+            }, 500);
         },
         methods: {
             async submit(event) {

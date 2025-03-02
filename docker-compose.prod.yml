@@ -2,11 +2,17 @@ services:
   mainframe:
     build:
       context: .  # Use the current directory as the build context
-      dockerfile: ./docker/mainframe/prod.Dockerfile
+      dockerfile: ./docker/mainframe/dev.Dockerfile
+      args:
+        APP_NAME: ${APP_NAME}
+    restart: always
     volumes:
-      - ./nine-tails:/app  # Bind mount the nine-tails directory to the container for development
-      - ./.env:/app/.env  # Bind mount the .env file to the container for development
-      - ./requirements.txt:/app/requirements.txt # Bind mount the requirements.txt file to the container for development
+      - static_volume:/app/static 
+      - media_volume:/app/media
+    env_file:
+      - .env
+    environment:
+      - APP_NAME=${APP_NAME}
     depends_on:
       - db
 
@@ -14,15 +20,18 @@ services:
   nginx:
     build:
       context: .  # Use the current directory as the build context
-      dockerfile: ./docker/nginx/prod.Dockerfile  # Specify the custom Dockerfile for Nginx
+      dockerfile: ./docker/nginx/dev.Dockerfile  # Specify the custom Dockerfile for Nginx
+    restart: always
     volumes:
-      - ./nine-tails/static:/app/static # Bind mount the current directory to the container for development
+      - static_volume:/app/static # Bind mount the current directory to the container for development
+      - media_volume:/app/media #
+    env_file:
+      - .env
     ports:
       - "80:80"   # HTTP
       - "443:443" # HTTPS
     depends_on:
       - mainframe
-      - frontend
 
 
   db:
@@ -30,21 +39,15 @@ services:
       context: .  # Use the current directory as the build context
       dockerfile: ./docker/database/Dockerfile  # Specify the custom Dockerfile for database
     restart: always
-    environment:
-      # POSTGRES_HOST_AUTH_METHOD: trust # Not recommended
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5544:5432"  # Expose the PostgreSQL port to the host machine for PgAdmin
     volumes:
       - db_volume:/var/lib/postgresql/data
-
-
-  frontend:
-    build:
-      context: .  # Use the current directory as the build context
-      dockerfile: ./docker/frontend/prod.Dockerfile  # Specify the custom Dockerfile for frontend
-    restart: always
-
+    env_file:
+      - .env
 
 volumes:
   db_volume:
+  static_volume:
+  media_volume:
+

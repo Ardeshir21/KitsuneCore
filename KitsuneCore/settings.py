@@ -248,13 +248,35 @@ else:
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 # App Information Settings
 APP_INFO = {
     'APP_NAME': os.getenv('APP_NAME'),
     'COMPANY_NAME': os.getenv('COMPANY_NAME'),
+    'APP_LOGO_PATH': os.getenv('APP_LOGO_PATH'),
+    'APP_FAVICON_PATH': os.getenv('APP_FAVICON_PATH'),
+    'APP_LAYOUT_DIRECTION': os.getenv('APP_LAYOUT_DIRECTION'),
+    'APP_LAYOUT_LANGUAGE': os.getenv('APP_LAYOUT_LANGUAGE'),
     'SOCIAL_LINKS': {
         'twitter': os.getenv('SOCIAL_TWITTER'),
         'facebook': os.getenv('SOCIAL_FACEBOOK'),
         'instagram': os.getenv('SOCIAL_INSTAGRAM'),
+    },
+    'META_INFO': {
+        'META_AUTHOR': os.getenv('META_AUTHOR'),
+        'IMAGE_512x512_PATH': os.getenv('IMAGE_512x512_PATH'),
+        'IMAGE_180x180_PATH': os.getenv('IMAGE_180x180_PATH'),
+        'IMAGE_70x70_PATH': os.getenv('IMAGE_70x70_PATH'),
+        'IMAGE_32x32_PATH': os.getenv('IMAGE_32x32_PATH'),
+        'IMAGE_16x16_PATH': os.getenv('IMAGE_16x16_PATH'),
+        'SVG_PATH': os.getenv('SVG_PATH'),
+    },
+    'PAGE_META_INFO': {
+        'PAGE_TITLE': os.getenv('PAGE_TITLE'),
+        'META_DESCRIPTION': os.getenv('META_DESCRIPTION'),
+        'META_KEYWORDS': os.getenv('META_KEYWORDS'),
+        'OG_IMAGE_1080x1080_PATH': os.getenv('OG_IMAGE_1080x1080_PATH'),
+        'CANONICAL_URL': os.getenv('CANONICAL_URL'),
+        'ROBOTS_CONTENT': os.getenv('ROBOTS_CONTENT'),
     }
 }

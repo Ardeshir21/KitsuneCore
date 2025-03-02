@@ -1,99 +1,126 @@
-{% extends "CoreApp/simple_vue_layout/vue-layout.html" %}
+{% extends "CoreApp/vue_layout/vue-layout.html" %}
 {% load i18n %}
 {% load account %}
 
-{% block title %}{% trans "Sign Up" %}{% endblock title %}
 
 {% block content %}
 <v-container fluid class="fill-height">
   <v-row align="center" justify="center">
     <v-col cols="12" sm="8" md="6" lg="4">
       <v-card class="mx-auto elevation-10 rounded-lg">
-        <v-card-item class="text-center pb-0">
-          {% include "AuthApp/components/logo.html" %}
-          <v-card-title class="text-h4 font-weight-bold">
-            {% trans "Create Account" %}
-          </v-card-title>
-          <v-card-subtitle>
-            {% trans "Sign up to get started" %}
-          </v-card-subtitle>
-        </v-card-item>
+        <template v-if="initialized">
+          <v-card-item class="text-center mt-8">
+            {% include "AuthApp/components/logo.html" %}
+            <v-card-title class="text-h4 font-weight-bold">
+              {% trans "Create Account" %}
+            </v-card-title>
+            <v-card-subtitle>
+              {% trans "Sign up to get started" %}
+            </v-card-subtitle>
+          </v-card-item>
 
-        <v-card-text class="pa-4">
-          <v-form
-            method="POST"
-            action="{% url 'account_signup' %}"
-            class="signup"
-            validate-on="input"
-            @submit.prevent="submit"
-          >
-            {% csrf_token %}
-            
-            {% if redirect_field_value %}
-            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-            {% endif %}
-
-            <v-text-field
-              name="email"
-              label="{{ form.email.label }}"
-              type="email"
-              variant="outlined"
-              prepend-inner-icon="mdi-email"
-              class="mb-2"
-              :rules="rules.email"
+          <v-card-text class="pa-4">
+            <v-form
+              method="POST"
+              action="{% url 'account_signup' %}"
+              class="signup"
               validate-on="input"
-              autocomplete="email"
-              {% if form.email.errors %}
-              error-messages="{{ form.email.errors|striptags }}"
-              {% endif %}
-            ></v-text-field>
-
-            <v-text-field
-              v-model="password"
-              name="password1"
-              label="{{ form.password1.label }}"
-              :type="showPassword ? 'text' : 'password'"
-              variant="outlined"
-              prepend-inner-icon="mdi-lock"
-              :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-              @click:append-inner="showPassword = !showPassword"
-              class="mb-4"
-              :rules="rules.password1"
-              validate-on="input"
-              autocomplete="new-password"
-              {% if form.password1.errors %}
-              error-messages="{{ form.password1.errors|striptags }}"
-              {% endif %}
-            ></v-text-field>
-
-            <!-- Hidden password2 field that will be automatically filled -->
-            <input type="hidden" name="password2" :value="password">
-
-            <v-btn
-              type="submit"
-              color="primary"
-              block
-              size="large"
-              class="mb-4"
-              :loading="loading"
+              @submit.prevent="submit"
             >
-              {% trans "Sign Up" %}
-              <v-icon end icon="mdi-account-plus"></v-icon>
-            </v-btn>
+              {% csrf_token %}
+              
+              {% if redirect_field_value %}
+              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+              {% endif %}
 
-            <div class="text-center">
-              <span class="text-medium-emphasis">{% trans "Already have an account?" %}</span>
+              <v-text-field
+                name="email"
+                label="{{ form.email.label }}"
+                type="email"
+                variant="outlined"
+                prepend-inner-icon="mdi-email"
+                class="mb-2"
+                :rules="rules.email"
+                validate-on="input"
+                autocomplete="email"
+                {% if form.email.errors %}
+                error-messages="{{ form.email.errors|striptags }}"
+                {% endif %}
+              ></v-text-field>
+
+              <v-text-field
+                v-model="password"
+                name="password1"
+                label="{{ form.password1.label }}"
+                :type="showPassword ? 'text' : 'password'"
+                variant="outlined"
+                prepend-inner-icon="mdi-lock"
+                :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                @click:append-inner="showPassword = !showPassword"
+                class="mb-4"
+                :rules="rules.password1"
+                validate-on="input"
+                autocomplete="new-password"
+                {% if form.password1.errors %}
+                error-messages="{{ form.password1.errors|striptags }}"
+                {% endif %}
+              ></v-text-field>
+
+              <!-- Hidden password2 field that will be automatically filled -->
+              <input type="hidden" name="password2" :value="password">
+
               <v-btn
-                variant="text"
+                type="submit"
                 color="primary"
-                href="{% url 'account_login' %}"
-                class="ms-2"
+                block
+                size="large"
+                class="mb-4"
+                :loading="loading"
               >
-                {% trans "Sign in" %}
+                {% trans "Sign Up" %}
+                <v-icon end icon="mdi-account-plus"></v-icon>
               </v-btn>
-            </div>
-          </v-form>
-        </v-card-text>
+
+              <div class="text-center">
+                <span class="text-medium-emphasis">{% trans "Already have an account?" %}</span>
+                <v-btn
+                  variant="text"
+                  color="primary"
+                  href="{% url 'account_login' %}"
+                  class="ms-2"
+                >
+                  {% trans "Sign in" %}
+                </v-btn>
+              </div>
+            </v-form>
+          </v-card-text>
+        </template>
+
+        <template v-else>
+          <v-card-item class="text-center pb-0">
+            <v-skeleton-loader
+              class="mx-auto mb-4"
+              max-width="150"
+              height="50"
+              type="image"
+            ></v-skeleton-loader>
+            <v-skeleton-loader
+              type="heading"
+              class="mb-2"
+            ></v-skeleton-loader>
+            <v-skeleton-loader
+              type="text"
+              class="mb-4"
+            ></v-skeleton-loader>
+          </v-card-item>
+
+          <v-card-text class="pa-4">
+            <v-skeleton-loader
+              type="article"
+              class="mb-4"
+            ></v-skeleton-loader>
+          </v-card-text>
+        </template>
       </v-card>
 
       {% include "AuthApp/components/footer.html" %}
@@ -108,6 +135,7 @@
         delimiters: ["[[", "]]"],
         data() {
             return {
+                initialized: false,
                 showPassword: false,
                 loading: false,
                 password: '',
@@ -127,10 +155,15 @@
                 }
             };
         },
+        mounted() {
+            setTimeout(() => {
+                this.initialized = true;
+            }, 500);
+        },
         methods: {
             async submit(event) {
-                this.loading = true
-                event.target.submit()
+                this.loading = true;
+                event.target.submit();
             }
         }
     });

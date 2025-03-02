@@ -8,6 +8,8 @@ services:
     restart: no
     volumes:
       - .:/app  # Bind mount the whole project directory to the container for development
+      - static_volume:/app/static
+      - media_volume:/app/media
     env_file:
       - .env
     environment:
@@ -22,7 +24,8 @@ services:
       dockerfile: ./docker/nginx/dev.Dockerfile  # Specify the custom Dockerfile for Nginx
     restart: no
     volumes:
-      - ./static:/app/static # Bind mount the current directory to the container for development
+      - static_volume:/app/static # Bind mount the current directory to the container for development
+      - media_volume:/app/media #
     env_file:
       - .env
     ports:
@@ -46,3 +49,6 @@ services:
 
 volumes:
   db_volume:
+  static_volume:
+  media_volume:
+

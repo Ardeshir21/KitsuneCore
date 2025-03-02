@@ -1,77 +1,104 @@
-{% extends "CoreApp/simple_vue_layout/vue-layout.html" %}
+{% extends "CoreApp/vue_layout/vue-layout.html" %}
 {% load i18n %}
 {% load account %}
 
-{% block title %}{% trans "Confirm Email" %}{% endblock title %}
 
 {% block content %}
 <v-container fluid class="fill-height">
   <v-row align="center" justify="center">
     <v-col cols="12" sm="8" md="6" lg="4">
       <v-card class="mx-auto elevation-10 rounded-lg">
-        <v-card-item class="text-center pb-0">
-          {% include "AuthApp/components/logo.html" %}
-          <v-card-title class="text-h4 font-weight-bold">
-            {% if confirmation %}
-              {% trans "Confirm Email" %}
-            {% else %}
-              {% trans "Invalid Link" %}
-            {% endif %}
-          </v-card-title>
-          <v-card-subtitle>
-            {% if confirmation %}
-              {% trans "Please confirm your email address" %}
-            {% else %}
-              {% trans "This confirmation link is invalid or has expired." %}
-            {% endif %}
-          </v-card-subtitle>
-        </v-card-item>
+        <template v-if="initialized">
+          <v-card-item class="text-center mt-8">
+            {% include "AuthApp/components/logo.html" %}
+            <v-card-title class="text-h4 font-weight-bold">
+              {% if confirmation %}
+                {% trans "Confirm Email" %}
+              {% else %}
+                {% trans "Invalid Link" %}
+              {% endif %}
+            </v-card-title>
+            <v-card-subtitle>
+              {% if confirmation %}
+                {% trans "Please confirm your email address" %}
+              {% else %}
+                {% trans "This confirmation link is invalid or has expired." %}
+              {% endif %}
+            </v-card-subtitle>
+          </v-card-item>
 
-        {% if confirmation %}
-        <v-card-text class="pa-4">
-          <v-form
-            method="post"
-            action="{% url 'account_confirm_email' confirmation.key %}"
-            @submit.prevent="submit"
-          >
-            {% csrf_token %}
-            
-            <p class="text-body-1 mb-4 text-center">
-              {% trans "Please confirm that" %} <strong>{{ confirmation.email_address.email }}</strong> {% trans "is your email address." %}
-            </p>
+          {% if confirmation %}
+          <v-card-text class="pa-4">
+            <v-form
+              method="post"
+              action="{% url 'account_confirm_email' confirmation.key %}"
+              @submit.prevent="submit"
+            >
+              {% csrf_token %}
+              
+              <p class="text-body-1 mb-4 text-center">
+                {% trans "Please confirm that" %} <strong>{{ confirmation.email_address.email }}</strong> {% trans "is your email address." %}
+              </p>
+
+              <v-btn
+                type="submit"
+                color="primary"
+                block
+                size="large"
+                class="mb-4"
+                :loading="loading"
+              >
+                {% trans "Confirm Email" %}
+                <v-icon end icon="mdi-check"></v-icon>
+              </v-btn>
+            </v-form>
+          </v-card-text>
+          {% else %}
+          <v-card-text class="pa-4 text-center">
+            <v-icon
+              icon="mdi-alert"
+              size="64"
+              color="warning"
+              class="mb-4"
+            ></v-icon>
 
             <v-btn
-              type="submit"
               color="primary"
+              href="{% url 'account_email' %}"
               block
-              size="large"
               class="mb-4"
-              :loading="loading"
             >
-              {% trans "Confirm Email" %}
-              <v-icon end icon="mdi-check"></v-icon>
+              {% trans "Manage Email Addresses" %}
             </v-btn>
-          </v-form>
-        </v-card-text>
-        {% else %}
-        <v-card-text class="pa-4 text-center">
-          <v-icon
-            icon="mdi-alert"
-            size="64"
-            color="warning"
-            class="mb-4"
-          ></v-icon>
+          </v-card-text>
+          {% endif %}
+        </template>
 
-          <v-btn
-            color="primary"
-            href="{% url 'account_email' %}"
-            block
-            class="mb-4"
-          >
-            {% trans "Manage Email Addresses" %}
-          </v-btn>
-        </v-card-text>
-        {% endif %}
+        <template v-else>
+          <v-card-item class="text-center pb-0">
+            <v-skeleton-loader
+              class="mx-auto mb-4"
+              max-width="150"
+              height="50"
+              type="image"
+            ></v-skeleton-loader>
+            <v-skeleton-loader
+              type="heading"
+              class="mb-2"
+            ></v-skeleton-loader>
+            <v-skeleton-loader
+              type="text"
+              class="mb-4"
+            ></v-skeleton-loader>
+          </v-card-item>
+
+          <v-card-text class="pa-4">
+            <v-skeleton-loader
+              type="article"
+              class="mb-4"
+            ></v-skeleton-loader>
+          </v-card-text>
+        </template>
       </v-card>
 
       {% include "AuthApp/components/footer.html" %}
@@ -86,13 +113,19 @@
         delimiters: ["[[", "]]"],
         data() {
             return {
+                initialized: false,
                 loading: false
             };
         },
+        mounted() {
+            setTimeout(() => {
+                this.initialized = true;
+            }, 500);
+        },
         methods: {
             async submit(event) {
-                this.loading = true
-                event.target.submit()
+                this.loading = true;
+                event.target.submit();
             }
         }
     });

@@ -1,7 +1,9 @@
 {% load static %}
-<v-img
-  src="{% static 'HomeApp/img/logo.png' %}"
-  class="mx-auto mb-4"
-  max-width="150"
-  contain
-></v-img> 
+<a href="{% url 'home' %}" class="text-decoration-none d-block">
+  <v-img
+    src="{% static APP_LOGO_PATH %}"
+    class="mx-auto mb-4"
+    max-width="150"
+    contain
+  ></v-img>
+</a> 

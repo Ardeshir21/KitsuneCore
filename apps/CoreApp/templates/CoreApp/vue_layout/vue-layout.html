@@ -1,0 +1,117 @@
+{% extends "CoreApp/master.html" %} 
+
+
+{% block header_css %}
+<link
+  href="https://cdn.jsdelivr.net/npm/vuetify@3.7.13/dist/vuetify.min.css"
+  rel="stylesheet"
+/>
+<link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css" rel="stylesheet">
+
+<style>
+  /* Ensure the app takes full height */
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    background-color: #f5f5f5;
+  }
+
+  /* Hide content while Vue is loading */
+  [v-cloak] {
+    display: none;
+  }
+</style>
+{% endblock header_css %} 
+
+
+{% block layout %}
+<div id="app" v-cloak>
+    <v-app>
+        {% block content %}{% endblock content %}
+    </v-app>
+</div>
+
+<!-- Skeleton loader shown while Vue initializes -->
+<div id="skeleton-loader" style="display: none;">
+    <v-app>
+        <v-container fluid class="fill-height">
+            <v-row align="center" justify="center">
+                <v-col cols="12" sm="8" md="6" lg="4">
+                    <v-card class="mx-auto elevation-10 rounded-lg">
+                        <v-card-item class="text-center pb-0">
+                            <v-skeleton-loader
+                                class="mx-auto mb-4"
+                                max-width="150"
+                                height="50"
+                                type="image"
+                            ></v-skeleton-loader>
+                            <v-skeleton-loader
+                                type="heading"
+                                class="mb-2"
+                            ></v-skeleton-loader>
+                            <v-skeleton-loader
+                                type="text"
+                                class="mb-4"
+                            ></v-skeleton-loader>
+                        </v-card-item>
+
+                        <v-card-text class="pa-4">
+                            <v-skeleton-loader
+                                type="article"
+                                class="mb-4"
+                            ></v-skeleton-loader>
+                        </v-card-text>
+                    </v-card>
+                </v-col>
+            </v-row>
+        </v-container>
+    </v-app>
+</div>
+{% endblock layout %}
+
+{% block vendor_js %}
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@3.7.13/dist/vuetify.min.js"></script>
+
+<script>
+    const { createApp } = Vue;
+    const { createVuetify } = Vuetify;
+  
+    const vuetify = createVuetify({
+      theme: {
+        defaultTheme: 'light',
+        themes: {
+          light: {
+            colors: {
+              primary: '#1867C0',
+              secondary: '#5CBBF6',
+              accent: '#005CAF',
+            },
+          },
+        },
+      },
+    });
+
+    // Show skeleton loader while Vue is initializing
+    document.getElementById('skeleton-loader').style.display = 'block';
+
+    // Hide skeleton loader when Vue is mounted
+    document.addEventListener('DOMContentLoaded', () => {
+        const appElement = document.getElementById('app');
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'data-v-app') {
+                    document.getElementById('skeleton-loader').style.display = 'none';
+                    observer.disconnect();
+                }
+            });
+        });
+
+        observer.observe(appElement, {
+            attributes: true
+        });
+    });
+</script>
+{% endblock vendor_js %}
+
