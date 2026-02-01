@@ -12,5 +12,11 @@ class AdminRequiredMixin(UserPassesTestMixin):
         return self.request.user.is_authenticated and self.request.user.is_staff
 
     def handle_no_permission(self):
-        messages.error(self.request, "You do not have permission to access this page.")
-        return redirect("home")  # Change "home" to your actual home page URL name
+        if self.request.user.is_authenticated:
+            # User is logged in but not an admin
+            messages.error(self.request, "You do not have permission to access this page.")
+            return redirect("HomeApp:home")  # Redirect to home page
+        else:
+            # User is not logged in
+            messages.error(self.request, "Please log in to continue.")
+            return redirect("account_login")

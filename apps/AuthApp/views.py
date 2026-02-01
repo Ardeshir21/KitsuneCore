@@ -290,7 +290,7 @@ class CustomEmailView(LoginRequiredMixin, EmailView):
     def dispatch(self, request, *args, **kwargs):
         # If ACCOUNT_MAX_EMAIL_ADDRESSES is 1, redirect to home
         if getattr(settings, 'ACCOUNT_MAX_EMAIL_ADDRESSES', 1) == 1:
-            return HttpResponseRedirect(reverse('home'))
+            return HttpResponseRedirect(reverse('HomeApp:home'))
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

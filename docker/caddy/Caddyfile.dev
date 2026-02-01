@@ -1,0 +1,75 @@
+# Caddy configuration for KitsuneCore local development
+# Simplified config without SSL for faster local development
+
+{
+    # Global options - disable automatic HTTPS for local development
+    auto_https off
+}
+
+# Listen on localhost without HTTPS
+:80 {
+
+    # Increase request body size limit to 30MB
+    request_body {
+        max_size 30MB
+    }
+
+    # Serve favicon directly
+    handle /favicon.ico {
+        root * /app/static/HomeApp/img
+        file_server
+    }
+
+    # Serve static files
+    handle /static/* {
+        root * /app
+        file_server
+    }
+
+    # Serve media files
+    handle /media/* {
+        root * /app
+        file_server
+    }
+
+    # Reverse proxy to Django application
+    handle {
+        reverse_proxy mainframe:9000 {
+            # Forward real client information
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            
+            # Timeouts (500 seconds)
+            transport http {
+                read_timeout 500s
+                write_timeout 500s
+                dial_timeout 500s
+            }
+        }
+    }
+
+    # Disable caching for development
+    header {
+        Cache-Control "no-cache, no-store, must-revalidate"
+        Pragma "no-cache"
+        -Server
+    }
+
+    # Simple logging for development
+    log {
+        output stdout
+        format console
+        level INFO
+    }
+}
+
+# Optional: Enable HTTPS for local development if needed
+# Uncomment this block to test HTTPS features locally
+# localhost {
+#     # Caddy will auto-generate a local certificate
+#     tls internal
+#     
+#     # Same handlers as above...
+# }

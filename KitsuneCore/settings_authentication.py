@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy
-
+import os
 
 # allAuth Settings
 AUTHENTICATION_BACKENDS = [
@@ -12,16 +12,22 @@ AUTHENTICATION_BACKENDS = [
 
 AUTH_USER_MODEL = 'AuthApp.CoreUser'
 
-LOGIN_REDIRECT_URL = reverse_lazy('home')
+LOGIN_REDIRECT_URL = reverse_lazy('HomeApp:home')
+ACCOUNT_LOGOUT_REDIRECT_URL = reverse_lazy('HomeApp:home')
 LOGIN_URL = reverse_lazy('account_login')
 
 # ACCOUNT_ADAPTER = 'apps.AuthApp.adaptor.AccountAdapter'
 
+# if we are in production, use https
+if os.getenv('MY_SPACE') == 'production':
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_USERNAME_REQUIRED = False
+# ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE  = False
 ACCOUNT_LOGIN_METHODS = {'email'}
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE  = False
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*']
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
 ACCOUNT_MAX_EMAIL_ADDRESSES = 1

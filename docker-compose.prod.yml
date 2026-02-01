@@ -2,7 +2,7 @@ services:
   mainframe:
     build:
       context: .  # Use the current directory as the build context
-      dockerfile: ./docker/mainframe/dev.Dockerfile
+      dockerfile: ./docker/mainframe/Dockerfile
       args:
         APP_NAME: ${APP_NAME}
     restart: always
@@ -16,23 +16,31 @@ services:
     depends_on:
       - db
 
-
-  nginx:
+  caddy:
     build:
       context: .  # Use the current directory as the build context
-      dockerfile: ./docker/nginx/dev.Dockerfile  # Specify the custom Dockerfile for Nginx
+      dockerfile: ./docker/caddy/Dockerfile  # Specify the custom Dockerfile for Caddy
     restart: always
     volumes:
-      - static_volume:/app/static # Bind mount the current directory to the container for development
-      - media_volume:/app/media #
+      - static_volume:/app/static  # Static files
+      - media_volume:/app/media    # Media files
+      - caddy_data:/data           # Caddy data (certificates, etc.)
+      - caddy_config:/config       # Caddy configuration cache
     env_file:
       - .env
+    environment:
+      - CERTBOT_EMAIL=${CERTBOT_EMAIL:-admin@kitsunecore.com}
+      - DOMAIN_NAME=${DOMAIN_NAME:-kitsunecore.com}
+      - WWW_DOMAIN_NAME=${WWW_DOMAIN_NAME:-www.kitsunecore.com}
+      - SERVER_IP=${SERVER_IP:-0.0.0.0}
     ports:
-      - "80:80"   # HTTP
-      - "443:443" # HTTPS
+      - "80:80"       # HTTP
+      - "443:443"     # HTTPS
+      - "443:443/udp" # HTTP/3 (QUIC)
+    networks:
+      - default
     depends_on:
       - mainframe
-
 
   db:
     build:
@@ -50,4 +58,5 @@ volumes:
   db_volume:
   static_volume:
   media_volume:
-
+  caddy_data:    # Caddy data persistence (certificates)
+  caddy_config:  # Caddy configuration cache

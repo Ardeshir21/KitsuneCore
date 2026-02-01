@@ -1,4 +1,4 @@
-# Dockerfile.dev
+# Dockerfile
 
 # Use a specific Python version
 FROM python:3.12-bookworm
@@ -32,5 +32,5 @@ ENV APP_NAME=${APP_NAME}
 # Debugging: Print the app name during build
 RUN echo "APP_NAME: $APP_NAME"
 
-# Set the default command to run the application
+# Set the default command to run the application (Production default)
 CMD gunicorn --config ./docker/mainframe/gunicorn-cfg.py "${APP_NAME}.wsgi:application"

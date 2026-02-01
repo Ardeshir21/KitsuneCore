@@ -2,9 +2,10 @@ services:
   mainframe:
     build:
       context: .  # Use the current directory as the build context
-      dockerfile: ./docker/mainframe/dev.Dockerfile
+      dockerfile: ./docker/mainframe/Dockerfile
       args:
         APP_NAME: ${APP_NAME}
+    command: python manage.py runserver 0.0.0.0:9000
     restart: no
     volumes:
       - .:/app  # Bind mount the whole project directory to the container for development
@@ -18,19 +19,18 @@ services:
       - db
 
 
-  nginx:
+  caddy:
     build:
       context: .  # Use the current directory as the build context
-      dockerfile: ./docker/nginx/dev.Dockerfile  # Specify the custom Dockerfile for Nginx
+      dockerfile: ./docker/caddy/dev.Dockerfile  # Specify the custom Dockerfile for Caddy
     restart: no
     volumes:
-      - static_volume:/app/static # Bind mount the current directory to the container for development
-      - media_volume:/app/media #
+      - static_volume:/app/static  # Static files
+      - media_volume:/app/media    # Media files
     env_file:
       - .env
     ports:
-      - "80:80"   # HTTP
-      - "443:443" # HTTPS
+      - "80:80"   # HTTP only for development
     depends_on:
       - mainframe
 
@@ -47,8 +47,10 @@ services:
     env_file:
       - .env
 
+
 volumes:
   db_volume:
   static_volume:
   media_volume:
+
 
