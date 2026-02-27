@@ -7,16 +7,7 @@
   dir="{{ APP_LAYOUT_DIRECTION }}"
 >
   <head>
-    {% with
-      seo_title_value=seo_title|default:PAGE_META.PAGE_TITLE
-      seo_description_value=seo_description|default:PAGE_META.META_DESCRIPTION
-      seo_keywords_value=seo_keywords|default:PAGE_META.META_KEYWORDS
-      seo_canonical_value=seo_canonical|default:PAGE_META.CANONICAL_URL
-      seo_robots_value=seo_robots|default:PAGE_META.ROBOTS_CONTENT
-      seo_og_image_value=seo_og_image|default:PAGE_META.OG_IMAGE_1080x1080_PATH
-      seo_og_type_value=seo_og_type|default:"website"
-      seo_twitter_site_value=seo_twitter_site|default:SOCIAL_LINKS.twitter
-    %}
+    {% with seo_title_value=seo_title|default:PAGE_META.PAGE_TITLE seo_description_value=seo_description|default:PAGE_META.META_DESCRIPTION seo_keywords_value=seo_keywords|default:PAGE_META.META_KEYWORDS seo_canonical_value=seo_canonical|default:PAGE_META.CANONICAL_URL seo_robots_value=seo_robots|default:PAGE_META.ROBOTS_CONTENT seo_og_image_value=seo_og_image|default:PAGE_META.OG_IMAGE_1080x1080_PATH seo_og_type_value=seo_og_type|default:"website" seo_twitter_site_value=seo_twitter_site|default:SOCIAL_LINKS.twitter %}
     <title>
       {{ seo_title_value }}
     </title>
