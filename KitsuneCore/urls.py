@@ -23,4 +23,9 @@ urlpatterns = [
     path('core/', include('apps.CoreApp.urls')),  
     path('auth/', include('apps.AuthApp.urls')), 
     path('', include('apps.HomeApp.urls', namespace='HomeApp')),
+    path(
+        'robots.txt',
+        TemplateView.as_view(template_name='robots.txt', content_type='text/plain'),
+        name='robots_txt',
+    ),
 ]

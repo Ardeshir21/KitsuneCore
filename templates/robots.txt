@@ -1,0 +1,43 @@
+User-agent: *
+Allow: /
+
+# Block private/sensitive app areas
+Disallow: /captain/
+Disallow: /auth/
+Disallow: /admin/
+Disallow: /api/private/
+Disallow: /accounts/
+
+# Allow user-triggered AI assistants/search access
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# Block AI training/reference crawlers
+User-agent: GPTBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+# Optional crawl hygiene
+Crawl-delay: 10
+
+Sitemap: /sitemap.xml
