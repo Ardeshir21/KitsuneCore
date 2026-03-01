@@ -53,8 +53,12 @@ ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS]
 CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
 CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in CSRF_TRUSTED_ORIGINS]
 
-# Application definition
+# Trust Caddy's forwarded protocol header so Django knows requests arrived over HTTPS
+if os.getenv('MY_SPACE') == 'production':
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    USE_X_FORWARDED_HOST = True
 
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

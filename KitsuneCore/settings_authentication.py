@@ -18,9 +18,6 @@ LOGIN_URL = reverse_lazy('account_login')
 
 # ACCOUNT_ADAPTER = 'apps.AuthApp.adaptor.AccountAdapter'
 
-# if we are in production, use https
-if os.getenv('MY_SPACE') == 'production':
-    ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 # ACCOUNT_EMAIL_REQUIRED = True
@@ -38,6 +35,14 @@ EMAIL_RESEND_LIMIT = 8
 
 SOCIALACCOUNT_LOGIN_ON_GET = True # It goes directly to 3rd-party authentication page. The "SOCIALACCOUNT_" is the prefix for app_settings of SocialApp
 # SOCIALACCOUNT_ADAPTER = 'Apps.UserAuthentication.adapter.MySocialAccountAdapter'
+
+# Google already verifies the email, so skip verification for social logins
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_EMAIL_REQUIRED = False
+
+# When Google email matches an existing account, auto-connect without sending a confirmation email
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 
 # Provider specific settings
 SOCIALACCOUNT_PROVIDERS = {
